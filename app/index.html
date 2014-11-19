@@ -1,6 +1,7 @@
 <!doctype html>
 <html class="no-js">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <title></title>
     <meta name="description" content="">
@@ -14,39 +15,55 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
-  </head>
-  <body ng-app="angularAndPluginsAppApp">
+</head>
+
+<body>
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Add your site or application content here -->
     <div class="container">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a ui-sref="home">Home</a></li>
-          <li><a ui-sref="about">About</a></li>
-        </ul>
-        <h3 class="text-muted">angularAndPluginsApp</h3>
-      </div>
+        <div class="header">
+            <ul class="nav nav-pills pull-right">
+                <li class="active">
+                    <a ui-sref="home">Home -> {{prueba}}</a>
+                </li>
 
-      <div ui-view=""></div>
+                <li>
+                    <a ui-sref="about">About</a>
+                </li>
+            </ul>
 
-      <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-      </div>
+            <h3 class="text-muted">angularAndPluginsApp</h3>
+        </div>
+
+        <div ui-view=""></div>
+
+        <div class="footer">
+            <p>
+                <span class="glyphicon glyphicon-heart"></span>from the Yeoman team
+            </p>
+        </div>
     </div>
 
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <script>
+    (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
+    ga('create', 'UA-XXXXX-X');
+    ga('send', 'pageview');
     </script>
 
     <!-- build:js(.) scripts/oldieshim.js -->
@@ -67,14 +84,42 @@
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-deferred-bootstrap/angular-deferred-bootstrap.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
-        <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/about.js"></script>
+    <!-- endbuild -->
+
+    <script>
+    // We will load the config from API so we need to bootstrap angular manually
+    window.deferredBootstrapper.bootstrap({
+        element: window.document.body,
+        module: 'angularAndPluginsAppApp',
+        resolve: {
+            STARTUP_CONFIG: ['$http', '$q', '$location', function($http, $q, $location) {
+                var defered = $q.defer();
+                var promise = defered.promise;
+                $http.get('/params.json').then(
+                    function(response) {
+                        // params is loaded: create the config constant
+                        angular.module('angularAndPluginsAppApp').constant('config', response.data);
+                        defered.resolve();
+                    },
+                    function() {
+                        // params is not loaded: redirect to page error
+                        //$location.url('/error');
+                        defered.reject();
+                    });
+                return promise;
+            }]
+        }
+    });
+    </script>
 </body>
+
 </html>
