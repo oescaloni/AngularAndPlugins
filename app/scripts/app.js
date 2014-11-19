@@ -37,14 +37,14 @@ angular
     .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('home', {
-                url: "/",
-                templateUrl: "views/main.html",
+                url: '/',
+                templateUrl: 'views/main.html',
                 controller: 'MainCtrl',
             })
       
             .state('about', {
-                url: "/about",
-                templateUrl: "views/about.html",
+                url: '/about',
+                templateUrl: 'views/about.html',
                 controller: 'AboutCtrl',
             })
         ;
