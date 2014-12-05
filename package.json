@@ -1,7 +1,9 @@
 {
   "name": "angularandpluginsapp",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "angular-md5": "~0.1.7"
+  },
   "devDependencies": {
     "grunt": "^0.4.1",
     "grunt-autoprefixer": "^0.7.3",
