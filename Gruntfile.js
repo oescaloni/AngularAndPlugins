@@ -7,6 +7,14 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
+var path = require('path');
+
+var mountFolder = function (connect, dir) {
+    return connect.static(path.resolve(dir));
+};
+
+var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
+
 module.exports = function (grunt) {
 
   // Load grunt tasks automatically
@@ -74,14 +82,16 @@ module.exports = function (grunt) {
       livereload: {
         options: {
           open: true,
-          middleware: function (connect) {
+          base: appConfig.app,
+          middleware: function(connect) {
+            var modRewrite = require('connect-modrewrite');
+
             return [
-              connect.static('.tmp'),
-              connect().use(
-                '/bower_components',
-                connect.static('./bower_components')
-              ),
-              connect.static(appConfig.app)
+              modRewrite(['!(\\..+)$ /index.html']),
+              proxySnippet,
+              mountFolder(connect, '.tmp'),
+              mountFolder(connect, appConfig.app),
+              mountFolder(connect, './bower_components')
             ];
           }
         }
@@ -365,6 +375,7 @@ module.exports = function (grunt) {
       'wiredep',
       'concurrent:server',
       'autoprefixer',
+      'clean:server',
       'connect:livereload',
       'watch'
     ]);
