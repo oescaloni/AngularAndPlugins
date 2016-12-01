@@ -5,6 +5,6 @@ angular
     .controller('BlockCtrl', function(
         $scope
     ) {
-        $scope.prueba = 'prueba';
+
     })
 ;

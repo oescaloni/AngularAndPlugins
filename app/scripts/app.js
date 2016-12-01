@@ -15,7 +15,8 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'angular-blocks'
   ])
   .config(function($routeProvider, $locationProvider) {
     if (window.history && window.history.pushState) {
@@ -28,7 +29,7 @@ angular
 
     $routeProvider
       .when('/', {
-        templateUrl: 'views/block.html',
+        templateUrl: 'views/variation-block.html',
         controller: 'BlockCtrl'
       })
       .otherwise({
